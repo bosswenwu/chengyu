@@ -5,13 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>每日成语 · 日历挂件</title>
 <meta name="description" content="每日一条成语，仿老黄历撕历：拼音、逐字拆解、中英释义、例句，附农历与二十四节气。" />
-<meta name="theme-color" content="#e7d9ba" />
+<meta name="theme-color" id="metaTheme" content="#e7d9ba" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23b23f2e'/%3E%3Ctext x='32' y='46' font-size='40' text-anchor='middle' fill='%23fff6ec' font-family='Kaiti SC,STKaiti,KaiTi,serif' font-weight='700'%3E%E8%AF%AD%3C/text%3E%3C/svg%3E" />
 <style>
   :root{
     /* 纸色（默认皮肤：米黄） */
     --bg1:rgba(255,252,240,.9); --bg2:#e7d9ba; --bg3a:#eee2cb; --bg3b:#d9cbae;
     --paper:#f8f2e4; --paper-2:#efe5cd; --paper-3:#fbf6ea;
-    --ink:#33291f; --muted:#8b7a5f; --muted-2:#a4957c;
+    --ink:#33291f; --muted:#7c6a4e; --muted-2:#97876a;
     --line:#cbb98d; --line-dark:#a9955c; --gold:#b5912e; --gold-2:#8f711f;
     --surface:#fffdf6; --surface-2:#f3ead2;      /* 凸起卡/按钮 */
     --soft:rgba(255,255,255,.38);                /* 半透明面 */
@@ -30,7 +31,7 @@
   html[data-skin="rice"]{
     --bg1:rgba(255,255,255,.9); --bg2:#dfe2da; --bg3a:#eef0ea; --bg3b:#d6d9cf;
     --paper:#f4f5ef; --paper-2:#e9ebe2; --paper-3:#fafbf6;
-    --ink:#2d2f2a; --muted:#7d8072; --muted-2:#9a9c8e;
+    --ink:#2d2f2a; --muted:#6d7062; --muted-2:#8a8d7c;
     --line:#c7c9bc; --line-dark:#a7a999; --gold:#9c8c50; --gold-2:#7f7238;
     --surface:#ffffff; --surface-2:#eceee6;
     --soft:rgba(255,255,255,.5); --soft-strong:#ffffff; --rim:rgba(255,255,255,.7);
@@ -52,10 +53,13 @@
   html[data-accent="G"][data-skin="dark"]{ --accent:#37b483; --accent-ink:#2a9c6e; --accent-glow:rgba(55,180,131,.20); }
 
   *{ box-sizing:border-box; }
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  .seg button:focus-visible{ outline-offset:-2px; }
+  .btn,.seg button,.chip,.gcell,.termpill{ touch-action:manipulation; }
   html,body{ height:100%; }
   body{
     margin:0; min-height:100vh; min-height:100dvh;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    display:flex; flex-direction:column; align-items:center;
     gap:14px; padding:26px 16px calc(26px + env(safe-area-inset-bottom));
     font-family:var(--sans); color:var(--ink);
     background:
@@ -84,7 +88,7 @@
   /* ---------- 顶栏 ---------- */
   .toolbar{
     position:relative; z-index:2; display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:center;
-    max-width:480px; width:100%;
+    max-width:480px; width:100%; margin-top:auto;
   }
   .brand{ font-family:var(--serif); font-size:18px; letter-spacing:3px; color:var(--ink); margin-right:auto; white-space:nowrap; display:flex; align-items:center; gap:9px; }
   .brand .seal{
@@ -105,7 +109,7 @@
     border-radius:11px; padding:8px 13px; font-size:13px; font-family:var(--sans); cursor:pointer;
     box-shadow:0 2px 0 rgba(0,0,0,.14), inset 0 1px 0 var(--rim); transition:transform .06s, box-shadow .06s, filter .15s;
   }
-  .btn:hover{ filter:brightness(1.04); }
+  @media (hover:hover){ .btn:hover{ filter:brightness(1.04); } }
   .btn:active{ transform:translateY(1px); box-shadow:0 1px 0 rgba(0,0,0,.14); }
   .btn.primary{ background:linear-gradient(180deg,var(--accent),var(--accent-ink)); color:#fff6ec; border-color:var(--accent-ink); box-shadow:0 3px 0 rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.18); }
   .btn.round{ padding:8px 16px; font-size:15px; }
@@ -158,17 +162,17 @@
   .date-row{ display:flex; align-items:stretch; justify-content:center; gap:6px; margin:18px 0 6px; }
   .date-cell{ display:flex; flex-direction:column; align-items:center; justify-content:center; border:1px solid var(--line-dark); background:linear-gradient(180deg,var(--surface),var(--surface-2)); border-radius:9px; padding:6px 10px; box-shadow:inset 0 1px 0 var(--rim); }
   .date-cell.wide{ min-width:96px; }
-  .date-cell .lbl{ font-size:9px; letter-spacing:1px; color:var(--muted); text-transform:uppercase; }
+  .date-cell .lbl{ font-size:10px; letter-spacing:1px; color:var(--muted); text-transform:uppercase; }
   .date-cell .val{ font-family:var(--serif); font-size:20px; line-height:1.15; white-space:nowrap; color:var(--ink); }
   .date-cell .val.day{ font-size:17px; }
   .sep-dot{ align-self:center; width:5px; height:5px; border-radius:50%; background:var(--line-dark); opacity:.7; }
   .date-cell.term{ background:linear-gradient(180deg,var(--accent-glow), var(--soft)); border-color:var(--accent); }
   .date-cell.term .val{ color:var(--accent); }
 
-  .lunar-bar{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin:6px 2px 18px; padding:7px 12px; border:1px dashed var(--line); border-radius:10px; background:var(--soft); }
-  .lunar-bar .left{ display:flex; align-items:center; gap:8px; font-family:var(--serif); font-size:14px; letter-spacing:1px; color:var(--ink); }
+  .lunar-bar{ flex-wrap:wrap; display:flex; align-items:center; justify-content:space-between; gap:6px 10px; margin:6px 2px 18px; padding:7px 12px; border:1px dashed var(--line); border-radius:10px; background:var(--soft); }
+  .lunar-bar .left{ display:flex; align-items:center; gap:8px; font-family:var(--serif); font-size:14px; letter-spacing:1px; color:var(--ink); white-space:nowrap; }
   .lunar-bar .left .mark{ color:var(--gold); font-size:12px; }
-  .termpill{ display:inline-flex; align-items:center; gap:5px; font-size:12px; padding:3px 9px; border-radius:20px; color:var(--muted); border:1px solid var(--line); background:var(--soft-strong); font-family:var(--sans); white-space:nowrap; }
+  .termpill{ display:inline-flex; align-items:center; gap:5px; font-size:12px; padding:3px 9px; border-radius:20px; color:var(--muted); border:1px solid var(--line); background:var(--soft-strong); font-family:var(--sans); white-space:nowrap; margin-left:auto; }
   .termpill.on{ color:#fff; background:linear-gradient(135deg,var(--accent),var(--accent-ink)); border-color:transparent; box-shadow:0 2px 6px -2px var(--accent); }
   .termpill .dot{ width:6px; height:6px; border-radius:50%; background:currentColor; opacity:.7; }
 
@@ -186,7 +190,7 @@
 
   .char-row{ display:flex; gap:8px; justify-content:center; margin:18px 0 22px; }
   .char-cell{ flex:1 1 0; min-width:0; border:1px solid var(--line); border-radius:9px; background:var(--soft); padding:9px 4px 7px; text-align:center; transition:transform .2s, box-shadow .2s, background .2s; }
-  .char-cell:hover{ transform:translateY(-3px); box-shadow:0 8px 16px -8px rgba(0,0,0,.4); background:var(--surface); }
+  @media (hover:hover){ .char-cell:hover{ transform:translateY(-3px); box-shadow:0 8px 16px -8px rgba(0,0,0,.4); background:var(--surface); } }
   .char-cell .big{ font-family:var(--serif); font-size:30px; line-height:1; color:var(--ink); }
   .char-cell .py{ margin-top:5px; font-size:13.5px; color:var(--ink); opacity:.82; font-family:var(--latin); font-weight:500; }
 
@@ -211,7 +215,7 @@
 
   .controls{ position:relative; z-index:2; display:flex; gap:8px; justify-content:center; flex-wrap:wrap; max-width:480px; width:100%; }
   .controls .btn{ flex:1 1 auto; min-width:96px; }
-  .hint{ position:relative; z-index:2; font-size:11px; color:var(--muted-2); letter-spacing:.5px; }
+  .hint{ position:relative; z-index:2; font-size:11px; color:var(--muted-2); letter-spacing:.5px; margin-bottom:auto; }
   .hint b{ color:var(--ink); font-weight:600; }
 
   /* Toast */
@@ -228,19 +232,21 @@
   .overlay.show{ opacity:1; pointer-events:auto; }
   .panel{ width:100%; max-width:520px; max-height:82vh; max-height:82dvh; display:flex; flex-direction:column; background:linear-gradient(180deg,var(--paper-3),var(--paper-2)); border:1px solid var(--line-dark); border-bottom:0; border-radius:18px 18px 0 0; box-shadow:0 -20px 50px -20px rgba(0,0,0,.5); transform:translateY(30px); transition:transform .28s cubic-bezier(.2,.9,.25,1); }
   .overlay.show .panel{ transform:none; }
-  .panel-head{ display:flex; align-items:center; gap:10px; padding:14px 16px 8px; }
+  .panel-head{ flex:0 0 auto; display:flex; align-items:center; gap:10px; padding:14px 16px 8px; }
   .panel-head .ttl{ font-family:var(--serif); font-size:16px; letter-spacing:2px; color:var(--ink); margin-right:auto; }
   .panel-head .x{ appearance:none; border:1px solid var(--line-dark); background:var(--surface); color:var(--ink); width:30px; height:30px; border-radius:8px; cursor:pointer; font-size:15px; line-height:1; }
-  .search{ margin:0 16px 8px; }
+  .search{ flex:0 0 auto; margin:0 16px 8px; }
   .search input{ width:100%; padding:9px 12px; border:1px solid var(--line-dark); border-radius:10px; background:var(--surface); color:var(--ink); font-size:14px; font-family:var(--sans); }
   .search input::placeholder{ color:var(--muted-2); }
-  .chips{ display:flex; gap:6px; overflow-x:auto; padding:2px 16px 10px; scrollbar-width:none; }
+  .chips{ flex:0 0 auto; display:flex; gap:6px; overflow-x:auto; padding:2px 16px 10px; scrollbar-width:none; }
   .chips::-webkit-scrollbar{ display:none; }
   .chip{ flex:0 0 auto; padding:5px 11px; border-radius:16px; border:1px solid var(--line-dark); background:var(--surface); color:var(--muted); font-size:12.5px; cursor:pointer; white-space:nowrap; }
   .chip.on{ color:#fff; background:linear-gradient(135deg,var(--accent),var(--accent-ink)); border-color:transparent; }
-  .grid{ overflow-y:auto; padding:4px 16px calc(20px + env(safe-area-inset-bottom)); display:grid; grid-template-columns:repeat(auto-fill,minmax(94px,1fr)); gap:8px; }
-  .gcell{ border:1px solid var(--line); border-radius:10px; background:var(--soft); padding:10px 4px; text-align:center; cursor:pointer; transition:transform .12s, background .12s; }
-  .gcell:hover{ transform:translateY(-2px); background:var(--surface); }
+  .grid{ flex:1 1 auto; min-height:0; overflow-y:auto; padding:4px 16px calc(20px + env(safe-area-inset-bottom)); display:grid; grid-template-columns:repeat(auto-fill,minmax(94px,1fr)); gap:8px; align-content:start; }
+  .gcell{ appearance:none; font-family:inherit; border:1px solid var(--line); border-radius:10px; background:var(--soft); padding:10px 4px; text-align:center; cursor:pointer; transition:transform .12s, background .12s; }
+  .gcell .gi,.gcell .gp{ display:block; }
+  @media (hover:hover){ .gcell:hover{ transform:translateY(-2px); background:var(--surface); } }
+  .gcell:active{ transform:translateY(1px); }
   .gcell .gi{ font-family:var(--serif); font-size:18px; color:var(--ink); }
   .gcell .gp{ font-size:12.5px; color:var(--muted); font-family:var(--latin); margin-top:3px; }
   .gcell .gh{ color:var(--accent); }
@@ -257,8 +263,10 @@
     .hint{ display:none; }
     .idiom-pinyin{ font-size:15.5px; letter-spacing:1px; }
     .block .en{ font-size:16px; }
+    .search input{ font-size:16px; }
+    .actions{ margin-bottom:auto; }
   }
-  @media (prefers-reduced-motion:reduce){ .card.in-next,.card.in-prev,.idiom-big .ch{ animation:none; } }
+  @media (prefers-reduced-motion:reduce){ .card.in-next,.card.in-prev,.idiom-big .ch{ animation:none; } .overlay,.panel,.toast{ transition:none; } }
 </style>
 </head>
 <body>
@@ -267,9 +275,9 @@
   <div class="toolbar">
     <span class="brand"><span class="seal">语</span>每日成语<small>· 黄历挂件</small></span>
     <span class="seg" id="segAccent" role="group" aria-label="配色">
-      <button data-v="auto" class="on">自动</button>
-      <button data-v="R">红</button>
-      <button data-v="G">绿</button>
+      <button data-v="auto" class="on" aria-pressed="true">自动</button>
+      <button data-v="R" aria-pressed="false">红</button>
+      <button data-v="G" aria-pressed="false">绿</button>
     </span>
     <button class="btn" id="btnSkin" title="切换纸张皮肤">皮肤·米黄</button>
     <button class="btn" id="btnShare" title="复制今日成语文案">分享</button>
@@ -328,18 +336,18 @@
   <div class="hint">← / → 翻页 · <b>空格</b> 回到今天 · 手机可左右滑动</div>
 
   <div class="overlay" id="overlay">
-    <div class="panel">
+    <div class="panel" role="dialog" aria-modal="true" aria-label="成语库" tabindex="-1">
       <div class="panel-head">
         <span class="ttl">成语库 · <span id="panelCount">0</span></span>
         <button class="x" id="btnClose" aria-label="关闭">✕</button>
       </div>
-      <div class="search"><input id="searchInput" type="search" placeholder="搜索成语 / 拼音 / 释义…" autocomplete="off" /></div>
+      <div class="search"><input id="searchInput" type="search" placeholder="搜索成语 / 拼音 / 释义…" autocomplete="off" aria-label="搜索成语、拼音或释义" /></div>
       <div class="chips" id="chips"></div>
       <div class="grid" id="grid"></div>
     </div>
   </div>
 
-  <div class="toast" id="toast">已复制到剪贴板</div>
+  <div class="toast" id="toast" role="status"></div>
 
   <script src="data.js"></script>
   <script src="data2.js"></script>
@@ -390,9 +398,13 @@
     function dayOfYear(date){ const start=new Date(date.getFullYear(),0,0); return Math.floor((date-start)/86400000); }
     function idiomFor(date){ const n=dayOfYear(date); return IDIOMS[((n-1)%IDIOMS.length+IDIOMS.length)%IDIOMS.length]; }
 
+    const SKIN_BG = { paper:"#e7d9ba", rice:"#dfe2da", dark:"#171310" };
     function applySkin(){
-      document.documentElement.setAttribute("data-skin", SKINS[state.skin][0]);
+      const s = SKINS[state.skin][0];
+      document.documentElement.setAttribute("data-skin", s);
       $("btnSkin").textContent = "皮肤·" + SKINS[state.skin][1];
+      const mt = document.getElementById("metaTheme");
+      if(mt && SKIN_BG[s]) mt.setAttribute("content", SKIN_BG[s]);
     }
 
     function render(dir){
@@ -404,7 +416,11 @@
 
       const accent = state.accent === "auto" ? idiom.tone : state.accent;
       document.documentElement.setAttribute("data-accent", accent);
-      document.querySelectorAll("#segAccent button").forEach(b=> b.classList.toggle("on", b.dataset.v===state.accent));
+      document.querySelectorAll("#segAccent button").forEach(b=>{
+        const on = b.dataset.v===state.accent;
+        b.classList.toggle("on", on);
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+      });
 
       $("md").textContent = MONTHS[d.getMonth()] + d.getDate() + "日";
       $("year").textContent = d.getFullYear();
@@ -503,12 +519,20 @@
       if(!list.length){ grid.innerHTML = `<div class="empty">${browseState.cat==="收藏"?"还没有收藏，点卡片下方的 ♡ 收藏":"没有匹配的成语"}</div>`; return; }
       grid.innerHTML = list.map(o=>{
         const f = favs.includes(o.x.idiom) ? ' <span class="gh">♥</span>' : '';
-        return `<div class="gcell" data-i="${o.i}"><div class="gi">${o.x.idiom}</div><div class="gp">${o.x.pinyin}${f}</div></div>`;
+        return `<button class="gcell" data-i="${o.i}"><span class="gi">${o.x.idiom}</span><span class="gp">${o.x.pinyin}${f}</span></button>`;
       }).join("");
       grid.querySelectorAll(".gcell").forEach(el=> el.addEventListener("click", ()=>{ state.pickIndex=+el.dataset.i; closeBrowse(); render("next"); }));
     }
-    function openBrowse(){ overlayOpen=true; overlay.classList.add("show"); buildChips(); buildGrid(); }
-    function closeBrowse(){ overlayOpen=false; overlay.classList.remove("show"); }
+    function openBrowse(){
+      overlayOpen=true; overlay.classList.add("show"); buildChips(); buildGrid();
+      document.body.style.overflow="hidden";
+      try{ overlay.querySelector(".panel").focus({preventScroll:true}); }catch(e){}
+    }
+    function closeBrowse(){
+      overlayOpen=false; overlay.classList.remove("show");
+      document.body.style.overflow="";
+      try{ $("btnBrowse").focus({preventScroll:true}); }catch(e){}
+    }
     $("btnBrowse").addEventListener("click", openBrowse);
     $("btnClose").addEventListener("click", closeBrowse);
     overlay.addEventListener("click", e=>{ if(e.target===overlay) closeBrowse(); });
@@ -522,7 +546,10 @@
       if(overlayOpen || e.target===searchInput) return; // 浏览/搜索时不翻页
       if(e.key==="ArrowRight") go(1,"next");
       else if(e.key==="ArrowLeft") go(-1,"prev");
-      else if(e.key===" "||e.key==="Home"){ e.preventDefault(); goToday(); }
+      else if(e.key===" "||e.key==="Home"){
+        if(e.target instanceof HTMLElement && e.target.closest("button")) return; // 按钮聚焦时空格交给原生激活
+        e.preventDefault(); goToday();
+      }
     });
     let tsx=0,tsy=0;
     card.addEventListener("touchstart", e=>{ const t=e.changedTouches[0]; tsx=t.clientX; tsy=t.clientY; }, {passive:true});
