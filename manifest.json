@@ -1,0 +1,17 @@
+{
+  "name": "每日成语",
+  "short_name": "每日成语",
+  "description": "每日一条成语，仿老黄历撕历：拼音、逐字拆解、中英释义、例句，附农历与二十四节气。",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#e7d9ba",
+  "theme_color": "#e7d9ba",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

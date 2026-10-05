@@ -6,7 +6,9 @@
 <title>每日成语 · 日历挂件</title>
 <meta name="description" content="每日一条成语，仿老黄历撕历：拼音、逐字拆解、中英释义、例句，附农历与二十四节气。" />
 <meta name="theme-color" id="metaTheme" content="#e7d9ba" />
+<link rel="manifest" href="manifest.json" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23b23f2e'/%3E%3Ctext x='32' y='46' font-size='40' text-anchor='middle' fill='%23fff6ec' font-family='Kaiti SC,STKaiti,KaiTi,serif' font-weight='700'%3E%E8%AF%AD%3C/text%3E%3C/svg%3E" />
+<link rel="apple-touch-icon" href="icon.svg">
 <style>
   :root{
     /* 纸色（默认皮肤：米黄） */
@@ -351,6 +353,13 @@
 
   <script src="data.js"></script>
   <script src="lunar.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js');
+      });
+    }
+  </script>
   <script>
     const WEEK = ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
     const MONTHS = ["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"];
